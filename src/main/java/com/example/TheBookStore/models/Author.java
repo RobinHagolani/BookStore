@@ -4,8 +4,11 @@ package com.example.TheBookStore.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "authors")
@@ -25,12 +28,20 @@ public class Author {
     @Past(message = "Birthdate must be a past date")
     private LocalDate birthdate;
 
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime modifiedAt;
+
     public Long getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(Long authorID) {
-        this.authorId = authorID;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
     public String getName() {
@@ -55,5 +66,21 @@ public class Author {
 
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 }

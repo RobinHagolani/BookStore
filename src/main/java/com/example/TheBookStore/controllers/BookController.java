@@ -71,7 +71,7 @@ public class BookController {
         existingBook.setIsbn(book.getIsbn());
         existingBook.setGenre(book.getGenre());
         existingBook.setPrice(book.getPrice());
-        existingBook.setStockQuantity(book.getStockQuantity());
+//        existingBook.setStockQuantity(book.getStockQuantity());
 
 
         Publisher publisher = publisherRepository.findById(publisherId)
@@ -84,9 +84,9 @@ public class BookController {
         return "redirect:/books";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteBook(@PathVariable Long id) {
-        bookRepository.deleteById(id);
-        return "redirect:/books";
-    }
+//    @GetMapping("/delete/{id}")
+//    public String deleteBook(@PathVariable Long id) {
+//        bookRepository.deleteById(id);
+//        return "redirect:/books";
+//    }
 }

@@ -49,7 +49,7 @@
 ./target/classes/templates/books/list.html:            <td th:text="${book.price}"></td>
 ./target/classes/templates/books/list.html:            <td>
 ./target/classes/templates/books/list.html:                <a class="button is-small is-link" th:href="@{'/books/edit/' + ${book.bookId}}">Edit</a>
-./target/classes/templates/books/list.html:                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}">Delete</a>
+./target/classes/templates/books/list.html:                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}" disabled>Delete</a>
 ./target/classes/templates/books/list.html:            </td>
 ./target/classes/templates/books/list.html:        </tr>
 ./target/classes/templates/books/list.html:        </tbody>
@@ -175,13 +175,13 @@
 ./target/classes/templates/index.html:            <a class="button is-link is-large is-fullwidth" th:href="@{/books}">Manage Books</a>
 ./target/classes/templates/index.html:        </div>
 ./target/classes/templates/index.html:        <div class="column">
-./target/classes/templates/index.html:            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}">Manage Authors</a>
+./target/classes/templates/index.html:            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}" disabled>Manage Authors</a>
 ./target/classes/templates/index.html:        </div>
 ./target/classes/templates/index.html:        <div class="column">
-./target/classes/templates/index.html:            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}">Manage Categories</a>
+./target/classes/templates/index.html:            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}" disabled>Manage Categories</a>
 ./target/classes/templates/index.html:        </div>
 ./target/classes/templates/index.html:        <div class="column">
-./target/classes/templates/index.html:            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}">Manage Publishers</a>
+./target/classes/templates/index.html:            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}" disabled>Manage Publishers</a>
 ./target/classes/templates/index.html:        </div>
 ./target/classes/templates/index.html:    </div>
 ./target/classes/templates/index.html:</section>
@@ -368,6 +368,208 @@
 ./src/main/java/com/example/TheBookStore/models/Author.java:        this.birthdate = birthdate;
 ./src/main/java/com/example/TheBookStore/models/Author.java:    }
 ./src/main/java/com/example/TheBookStore/models/Author.java:}
+./src/main/java/com/example/TheBookStore/models/Inventory.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import jakarta.validation.constraints.Min;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import jakarta.validation.constraints.NotNull;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import java.time.LocalDate;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Inventory.java:@Table(name = "inventory")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:public class Inventory {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    private Long inventoryId;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @JoinColumn(name = "book_id", nullable = false)
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    private Book book;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @NotNull(message = "Stock quantity is required")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Min(value = 0, message = "Stock quantity must be 0 or greater")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Column(name = "StockQuantity")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    private int StockQuantity;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Column(name = "RestockDate")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    private LocalDate RestockDate;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:}
+./src/main/java/com/example/TheBookStore/models/Customer.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Customer.java:import jakarta.validation.constraints.Email;
+./src/main/java/com/example/TheBookStore/models/Customer.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Customer.java:@Table(name = "customers")
+./src/main/java/com/example/TheBookStore/models/Customer.java:public class Customer {
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private Long customerId;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @NotBlank(message = "Name is required")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private String name;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @NotBlank(message = "Email is required")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Email(message = "Email should be valid")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(nullable = false, unique = true)
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private String email;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @NotBlank(message = "Phone is required")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private String phone;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @NotBlank(message = "Address is required")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private String address;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public Long getCustomerId() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return customerId;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setCustomerId(Long customerId) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.customerId = customerId;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public String getName() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return name;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setName(String name) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.name = name;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public String getEmail() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return email;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setEmail(String email) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.email = email;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public String getPhone() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return phone;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setPhone(String phone) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.phone = phone;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public String getAddress() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return address;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setAddress(String address) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.address = address;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:}
+./src/main/java/com/example/TheBookStore/models/Review.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Review.java:import jakarta.validation.constraints.Max;
+./src/main/java/com/example/TheBookStore/models/Review.java:import jakarta.validation.constraints.Min;
+./src/main/java/com/example/TheBookStore/models/Review.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Review.java:import jakarta.validation.constraints.NotNull;
+./src/main/java/com/example/TheBookStore/models/Review.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Review.java:import org.hibernate.annotations.UpdateTimestamp;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:import java.time.LocalDateTime;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Review.java:@Table(name = "reviews")
+./src/main/java/com/example/TheBookStore/models/Review.java:public class Review {
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Review.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Review.java:    private Long reviewId;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/models/Review.java:    @JoinColumn(name = "customer_id", nullable = false)
+./src/main/java/com/example/TheBookStore/models/Review.java:    private Customer customer;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/models/Review.java:    @JoinColumn(name = "book_id", nullable = false)
+./src/main/java/com/example/TheBookStore/models/Review.java:    private Book book;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @NotNull(message = "Rating is required")
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Min(value = 1, message = "Rating must be at least 1")
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Max(value = 5, message = "Rating must be at most 5")
+./src/main/java/com/example/TheBookStore/models/Review.java:    private int rating;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @NotBlank(message = "Comment is required")
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Column(length = 500) // Assuming comments should be concise
+./src/main/java/com/example/TheBookStore/models/Review.java:    private String comment;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Column(updatable = false)
+./src/main/java/com/example/TheBookStore/models/Review.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Review.java:    private LocalDateTime modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public Long getReviewId() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return reviewId;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setReviewId(Long reviewId) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.reviewId = reviewId;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public Customer getCustomer() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return customer;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setCustomer(Customer customer) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.customer = customer;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public Book getBook() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return book;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setBook(Book book) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.book = book;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public int getRating() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return rating;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setRating(int rating) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.rating = rating;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public String getComment() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return comment;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setComment(String comment) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.comment = comment;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return createdAt;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Review.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:
+./src/main/java/com/example/TheBookStore/models/Review.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Review.java:        this.modifiedAt = modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Review.java:    }
+./src/main/java/com/example/TheBookStore/models/Review.java:}
 ./src/main/java/com/example/TheBookStore/models/Category.java:package com.example.TheBookStore.models;
 ./src/main/java/com/example/TheBookStore/models/Category.java:
 ./src/main/java/com/example/TheBookStore/models/Category.java:
@@ -472,6 +674,138 @@
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.contactInfo = contactInfo;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:}
+./src/main/java/com/example/TheBookStore/models/Order.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Order.java:import jakarta.validation.constraints.DecimalMin;
+./src/main/java/com/example/TheBookStore/models/Order.java:import jakarta.validation.constraints.NotNull;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:import java.math.BigDecimal;
+./src/main/java/com/example/TheBookStore/models/Order.java:import java.time.LocalDate;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Order.java:@Table(name = "orders")
+./src/main/java/com/example/TheBookStore/models/Order.java:public class Order {
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Order.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Order.java:    private Long orderId;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/models/Order.java:    @JoinColumn(name = "customer_id", nullable = false)
+./src/main/java/com/example/TheBookStore/models/Order.java:    private Customer customer;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    @NotNull(message = "Order date is required")
+./src/main/java/com/example/TheBookStore/models/Order.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Order.java:    private LocalDate orderDate;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    @DecimalMin(value = "0.0", inclusive = false, message = "Total amount must be greater than 0")
+./src/main/java/com/example/TheBookStore/models/Order.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Order.java:    private BigDecimal totalAmount;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public Long getOrderId() {
+./src/main/java/com/example/TheBookStore/models/Order.java:        return orderId;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public void setOrderId(Long orderId) {
+./src/main/java/com/example/TheBookStore/models/Order.java:        this.orderId = orderId;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public Customer getCustomer() {
+./src/main/java/com/example/TheBookStore/models/Order.java:        return customer;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public void setCustomer(Customer customer) {
+./src/main/java/com/example/TheBookStore/models/Order.java:        this.customer = customer;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public LocalDate getOrderDate() {
+./src/main/java/com/example/TheBookStore/models/Order.java:        return orderDate;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public void setOrderDate(LocalDate orderDate) {
+./src/main/java/com/example/TheBookStore/models/Order.java:        this.orderDate = orderDate;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public BigDecimal getTotalAmount() {
+./src/main/java/com/example/TheBookStore/models/Order.java:        return totalAmount;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public void setTotalAmount(BigDecimal totalAmount) {
+./src/main/java/com/example/TheBookStore/models/Order.java:        this.totalAmount = totalAmount;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:}
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:package com.example.TheBookStore.relationships;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:import com.example.TheBookStore.models.Book;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:import com.example.TheBookStore.models.Order;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:import jakarta.validation.constraints.Min;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:import jakarta.validation.constraints.NotNull;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:import java.math.BigDecimal;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:@Entity
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:@Table(name = "order_details")
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:public class OrderDetails {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @Id
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    private Long orderDetailId;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @JoinColumn(name = "order_id", nullable = false)
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    private Order order;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @JoinColumn(name = "book_id", nullable = false)
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    private Book book;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @NotNull(message = "Quantity is required")
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @Min(value = 1, message = "Quantity must be at least 1")
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    private int quantity;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    @Transient
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public BigDecimal getPrice() {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        if (book != null && book.getPrice() != null) {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:            return book.getPrice().multiply(BigDecimal.valueOf(quantity));
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        return BigDecimal.ZERO;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public Long getOrderDetailId() {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        return orderDetailId;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public void setOrderDetailId(Long orderDetailId) {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        this.orderDetailId = orderDetailId;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public Order getOrder() {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        return order;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public void setOrder(Order order) {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        this.order = order;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public Book getBook() {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        return book;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public void setBook(Book book) {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        this.book = book;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public int getQuantity() {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        return quantity;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    public void setQuantity(int quantity) {
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:        this.quantity = quantity;
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:    }
+./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:}
 ./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:package com.example.TheBookStore.relationships;
 ./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
@@ -579,6 +913,13 @@
 ./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:	}
 ./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:
 ./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:}
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:import com.example.TheBookStore.models.Order;
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:public interface OrderRepository extends JpaRepository <Order, Long> {
+./src/main/java/com/example/TheBookStore/repositories/OrderRepository.java:}
 ./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:package com.example.TheBookStore.repositories;
 ./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:
 ./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:import com.example.TheBookStore.models.Publisher;
@@ -597,6 +938,20 @@
 ./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:@Repository
 ./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:public interface BookAuthorRepository extends JpaRepository<BookAuthor, Long> {
 ./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:import com.example.TheBookStore.models.Customer;
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:public interface CustomerRepository extends JpaRepository<Customer, Long> {
+./src/main/java/com/example/TheBookStore/repositories/CustomerRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:import com.example.TheBookStore.models.Review;
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:public interface ReviewRepository extends JpaRepository<Review, Long> {
+./src/main/java/com/example/TheBookStore/repositories/ReviewRepository.java:}
 ./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:package com.example.TheBookStore.repositories;
 ./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:
 ./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:import com.example.TheBookStore.models.Category;
@@ -615,6 +970,13 @@
 ./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:@Repository
 ./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:public interface AuthorRepository extends JpaRepository<Author, Long> {
 ./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:import com.example.TheBookStore.models.Inventory;
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:public interface InventoryRepository extends JpaRepository <Inventory, Long> {
+./src/main/java/com/example/TheBookStore/repositories/InventoryRepository.java:}
 ./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:package com.example.TheBookStore.repositories;
 ./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:
 ./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:import com.example.TheBookStore.models.Book;
@@ -633,6 +995,13 @@
 ./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:@Repository
 ./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:public interface BookCategoryRepository extends JpaRepository<BookCategory, Long> {
 ./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:import com.example.TheBookStore.relationships.OrderDetails;
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:public interface OrderDetailsRepository extends JpaRepository <OrderDetails, Long> {
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:}
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:package com.example.TheBookStore.controllers;
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
@@ -719,11 +1088,11 @@
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "redirect:/books";
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @GetMapping("/delete/{id}")
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String deleteBook(@PathVariable Long id) {
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:        bookRepository.deleteById(id);
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "redirect:/books";
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://    @GetMapping("/delete/{id}")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://    public String deleteBook(@PathVariable Long id) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://        bookRepository.deleteById(id);
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://        return "redirect:/books";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://    }
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:}
 ./src/main/resources/application.properties:spring.application.name=TheBookStore
 ./src/main/resources/application.properties:
@@ -757,7 +1126,7 @@
 ./src/main/resources/templates/books/list.html:            <td th:text="${book.price}"></td>
 ./src/main/resources/templates/books/list.html:            <td>
 ./src/main/resources/templates/books/list.html:                <a class="button is-small is-link" th:href="@{'/books/edit/' + ${book.bookId}}">Edit</a>
-./src/main/resources/templates/books/list.html:                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}">Delete</a>
+./src/main/resources/templates/books/list.html:                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}" disabled>Delete</a>
 ./src/main/resources/templates/books/list.html:            </td>
 ./src/main/resources/templates/books/list.html:        </tr>
 ./src/main/resources/templates/books/list.html:        </tbody>
@@ -883,13 +1252,13 @@
 ./src/main/resources/templates/index.html:            <a class="button is-link is-large is-fullwidth" th:href="@{/books}">Manage Books</a>
 ./src/main/resources/templates/index.html:        </div>
 ./src/main/resources/templates/index.html:        <div class="column">
-./src/main/resources/templates/index.html:            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}">Manage Authors</a>
+./src/main/resources/templates/index.html:            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}" disabled>Manage Authors</a>
 ./src/main/resources/templates/index.html:        </div>
 ./src/main/resources/templates/index.html:        <div class="column">
-./src/main/resources/templates/index.html:            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}">Manage Categories</a>
+./src/main/resources/templates/index.html:            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}" disabled>Manage Categories</a>
 ./src/main/resources/templates/index.html:        </div>
 ./src/main/resources/templates/index.html:        <div class="column">
-./src/main/resources/templates/index.html:            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}">Manage Publishers</a>
+./src/main/resources/templates/index.html:            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}" disabled>Manage Publishers</a>
 ./src/main/resources/templates/index.html:        </div>
 ./src/main/resources/templates/index.html:    </div>
 ./src/main/resources/templates/index.html:</section>

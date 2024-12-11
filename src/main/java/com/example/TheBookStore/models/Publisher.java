@@ -3,6 +3,10 @@ package com.example.TheBookStore.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "publishers")
@@ -22,14 +26,22 @@ public class Publisher {
 
     @NotBlank(message = "Contact information is required")
     @Column(nullable = false)
-    private String contactInfo;
+    private String contactName;
+
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime modifiedAt;
 
     public Long getPublisherId() {
         return publisherId;
     }
 
-    public void setPublisherId(Long publisherID) {
-        this.publisherId = publisherID;
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
     }
 
     public String getName() {
@@ -48,11 +60,27 @@ public class Publisher {
         this.address = address;
     }
 
-    public String getContactInfo() {
-        return contactInfo;
+    public String getContactName() {
+        return contactName;
     }
 
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 }

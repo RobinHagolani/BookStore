@@ -31,15 +31,15 @@ public class Review {
     @Max(value = 5, message = "Rating must be at most 5")
     private int rating;
 
-    @NotBlank(message = "Comment is required")
-    @Column(length = 500) // Assuming comments should be concise
+
     private String comment;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modifiedAt;
 
     public Long getReviewId() {

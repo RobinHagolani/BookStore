@@ -4,7 +4,8 @@
 <body>
 <section class="section">
     <h1 class="title" th:text="${book != null ? 'Edit Book' : 'Add Book'}"></h1>
-    <form th:action="${book != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+    <form th:action="${book?.bookId != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+    <input type="hidden" name="bookId" th:value="${book?.bookId}">
         <div class="field">
             <label class="label">Title</label>
             <div class="control">
