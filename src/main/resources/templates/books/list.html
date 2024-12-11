@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout.html :: head}"></head>
+<body>
+<section class="section">
+    <h1 class="title">Books</h1>
+    <a class="button is-primary mb-3" th:href="@{/books/new}">Add New Book</a>
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.bookId}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.price}"></td>
+            <td>
+                <a class="button is-small is-link" th:href="@{'/books/edit/' + ${book.bookId}}">Edit</a>
+                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}" disabled>Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

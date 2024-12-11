@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout.html :: head"></head>
+<body>
+<section class="section">
+    <h1 class="title">Welcome to the BookStore Dashboard</h1>
+    <div class="columns">
+        <div class="column">
+            <a class="button is-link is-large is-fullwidth" th:href="@{/books}">Manage Books</a>
+        </div>
+        <div class="column">
+            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}" disabled>Manage Authors</a>
+        </div>
+        <div class="column">
+            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}" disabled>Manage Categories</a>
+        </div>
+        <div class="column">
+            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}" disabled>Manage Publishers</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

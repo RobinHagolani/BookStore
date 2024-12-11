@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout.html :: head"></head>
+<body>
+<section class="section">
+    <h1 class="title" th:text="${book != null ? 'Edit Book' : 'Add Book'}"></h1>
+    <form th:action="${book != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+        <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+                <input class="input" type="text" name="title" th:value="${book?.title}" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Author</label>
+            <div class="control">
+                <div class="select">
+                    <select name="author" required>
+                        <option value="" disabled th:if="${book?.author == null}" selected>Select an author</option>
+                        <option th:each="author : ${authors}"
+                                th:value="${author.name}"
+                                th:text="${author.name}"
+                                th:selected="${book?.author == author.name}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">ISBN</label>
+            <div class="control">
+                <input class="input" type="text" name="isbn" th:value="${book?.isbn}" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Genre</label>
+            <div class="control">
+                <input class="input" type="text" name="genre" th:value="${book?.genre}">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Price</label>
+            <div class="control">
+                <input class="input" type="number" name="price" step="0.01" th:value="${book?.price}" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Publisher</label>
+            <div class="control">
+                <div class="select">
+                    <select name="publisherId" required>
+                        <option value="" disabled th:if="${book?.publisher == null}" selected>Select a publisher</option>
+                        <option th:each="publisher : ${publishers}"
+                                th:value="${publisher.publisherId}"
+                                th:text="${publisher.name}"
+                                th:selected="${book?.publisher?.publisherId == publisher.publisherId}">
+
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Stock Quantity</label>
+            <div class="control">
+                <input class="input" type="number" name="stockQuantity" th:value="${book?.stockQuantity}" required>
+            </div>
+        </div>
+        <div class="field">
+            <button class="button is-link" type="submit">Save</button>
+        </div>
+    </form>
+</section>
+</body>
+</html>

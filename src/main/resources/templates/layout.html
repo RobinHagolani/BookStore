@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStore Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css">
+</head>
+<body>
+<section class="hero is-primary">
+    <div class="hero-body">
+        <p class="title">BookStore Management</p>
+        <p class="subtitle">Manage your books, authors, categories, and publishers</p>
+    </div>
+</section>
+
+<nav class="navbar is-light">
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" th:href="@{/}">Dashboard</a>
+            <a class="navbar-item" th:href="@{/books}">Books</a>
+            <a class="navbar-item" th:href="@{/authors}">Authors</a>
+            <a class="navbar-item" th:href="@{/categories}">Categories</a>
+            <a class="navbar-item" th:href="@{/publishers}">Publishers</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div th:insert="${content}"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,897 @@
+./.mvn/wrapper/maven-wrapper.properties:# Licensed to the Apache Software Foundation (ASF) under one
+./.mvn/wrapper/maven-wrapper.properties:# or more contributor license agreements.  See the NOTICE file
+./.mvn/wrapper/maven-wrapper.properties:# distributed with this work for additional information
+./.mvn/wrapper/maven-wrapper.properties:# regarding copyright ownership.  The ASF licenses this file
+./.mvn/wrapper/maven-wrapper.properties:# to you under the Apache License, Version 2.0 (the
+./.mvn/wrapper/maven-wrapper.properties:# "License"); you may not use this file except in compliance
+./.mvn/wrapper/maven-wrapper.properties:# with the License.  You may obtain a copy of the License at
+./.mvn/wrapper/maven-wrapper.properties:#
+./.mvn/wrapper/maven-wrapper.properties:#   http://www.apache.org/licenses/LICENSE-2.0
+./.mvn/wrapper/maven-wrapper.properties:#
+./.mvn/wrapper/maven-wrapper.properties:# Unless required by applicable law or agreed to in writing,
+./.mvn/wrapper/maven-wrapper.properties:# software distributed under the License is distributed on an
+./.mvn/wrapper/maven-wrapper.properties:# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+./.mvn/wrapper/maven-wrapper.properties:# KIND, either express or implied.  See the License for the
+./.mvn/wrapper/maven-wrapper.properties:# specific language governing permissions and limitations
+./.mvn/wrapper/maven-wrapper.properties:# under the License.
+./.mvn/wrapper/maven-wrapper.properties:wrapperVersion=3.3.2
+./.mvn/wrapper/maven-wrapper.properties:distributionType=only-script
+./.mvn/wrapper/maven-wrapper.properties:distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.9/apache-maven-3.9.9-bin.zip
+./target/classes/application.properties:spring.application.name=TheBookStore
+./target/classes/application.properties:
+./target/classes/application.properties:spring.datasource.url=jdbc:mysql://localhost:3306/MyBookStore
+./target/classes/application.properties:spring.datasource.username=admin
+./target/classes/application.properties:spring.datasource.password=1q2w3e4r
+./target/classes/application.properties:
+./target/classes/application.properties:spring.jpa.hibernate.ddl-auto=update
+./target/classes/templates/books/list.html:<!DOCTYPE html>
+./target/classes/templates/books/list.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./target/classes/templates/books/list.html:<head th:replace="~{layout.html :: head}"></head>
+./target/classes/templates/books/list.html:<body>
+./target/classes/templates/books/list.html:<section class="section">
+./target/classes/templates/books/list.html:    <h1 class="title">Books</h1>
+./target/classes/templates/books/list.html:    <a class="button is-primary mb-3" th:href="@{/books/new}">Add New Book</a>
+./target/classes/templates/books/list.html:    <table class="table is-fullwidth">
+./target/classes/templates/books/list.html:        <thead>
+./target/classes/templates/books/list.html:        <tr>
+./target/classes/templates/books/list.html:            <th>ID</th>
+./target/classes/templates/books/list.html:            <th>Title</th>
+./target/classes/templates/books/list.html:            <th>Author</th>
+./target/classes/templates/books/list.html:            <th>Price</th>
+./target/classes/templates/books/list.html:            <th>Actions</th>
+./target/classes/templates/books/list.html:        </tr>
+./target/classes/templates/books/list.html:        </thead>
+./target/classes/templates/books/list.html:        <tbody>
+./target/classes/templates/books/list.html:        <tr th:each="book : ${books}">
+./target/classes/templates/books/list.html:            <td th:text="${book.bookId}"></td>
+./target/classes/templates/books/list.html:            <td th:text="${book.title}"></td>
+./target/classes/templates/books/list.html:            <td th:text="${book.author}"></td>
+./target/classes/templates/books/list.html:            <td th:text="${book.price}"></td>
+./target/classes/templates/books/list.html:            <td>
+./target/classes/templates/books/list.html:                <a class="button is-small is-link" th:href="@{'/books/edit/' + ${book.bookId}}">Edit</a>
+./target/classes/templates/books/list.html:                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}">Delete</a>
+./target/classes/templates/books/list.html:            </td>
+./target/classes/templates/books/list.html:        </tr>
+./target/classes/templates/books/list.html:        </tbody>
+./target/classes/templates/books/list.html:    </table>
+./target/classes/templates/books/list.html:</section>
+./target/classes/templates/books/list.html:</body>
+./target/classes/templates/books/list.html:</html>
+./target/classes/templates/books/form.html:<!DOCTYPE html>
+./target/classes/templates/books/form.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./target/classes/templates/books/form.html:<head th:replace="layout.html :: head"></head>
+./target/classes/templates/books/form.html:<body>
+./target/classes/templates/books/form.html:<section class="section">
+./target/classes/templates/books/form.html:    <h1 class="title" th:text="${book != null ? 'Edit Book' : 'Add Book'}"></h1>
+./target/classes/templates/books/form.html:    <form th:action="${book != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">Title</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <input class="input" type="text" name="title" th:value="${book?.title}" required>
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">Author</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <div class="select">
+./target/classes/templates/books/form.html:                    <select name="author" required>
+./target/classes/templates/books/form.html:                        <option value="" disabled th:if="${book?.author == null}" selected>Select an author</option>
+./target/classes/templates/books/form.html:                        <option th:each="author : ${authors}"
+./target/classes/templates/books/form.html:                                th:value="${author.name}"
+./target/classes/templates/books/form.html:                                th:text="${author.name}"
+./target/classes/templates/books/form.html:                                th:selected="${book?.author == author.name}"></option>
+./target/classes/templates/books/form.html:                    </select>
+./target/classes/templates/books/form.html:                </div>
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">ISBN</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <input class="input" type="text" name="isbn" th:value="${book?.isbn}" required>
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">Genre</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <input class="input" type="text" name="genre" th:value="${book?.genre}">
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">Price</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <input class="input" type="number" name="price" step="0.01" th:value="${book?.price}" required>
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">Publisher</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <div class="select">
+./target/classes/templates/books/form.html:                    <select name="publisherId" required>
+./target/classes/templates/books/form.html:                        <option value="" disabled th:if="${book?.publisher == null}" selected>Select a publisher</option>
+./target/classes/templates/books/form.html:                        <option th:each="publisher : ${publishers}"
+./target/classes/templates/books/form.html:                                th:value="${publisher.publisherId}"
+./target/classes/templates/books/form.html:                                th:text="${publisher.name}"
+./target/classes/templates/books/form.html:                                th:selected="${book?.publisher?.publisherId == publisher.publisherId}">
+./target/classes/templates/books/form.html:
+./target/classes/templates/books/form.html:                        </option>
+./target/classes/templates/books/form.html:                    </select>
+./target/classes/templates/books/form.html:                </div>
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <label class="label">Stock Quantity</label>
+./target/classes/templates/books/form.html:            <div class="control">
+./target/classes/templates/books/form.html:                <input class="input" type="number" name="stockQuantity" th:value="${book?.stockQuantity}" required>
+./target/classes/templates/books/form.html:            </div>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:        <div class="field">
+./target/classes/templates/books/form.html:            <button class="button is-link" type="submit">Save</button>
+./target/classes/templates/books/form.html:        </div>
+./target/classes/templates/books/form.html:    </form>
+./target/classes/templates/books/form.html:</section>
+./target/classes/templates/books/form.html:</body>
+./target/classes/templates/books/form.html:</html>
+./target/classes/templates/layout.html:<!DOCTYPE html>
+./target/classes/templates/layout.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./target/classes/templates/layout.html:<head>
+./target/classes/templates/layout.html:    <meta charset="UTF-8">
+./target/classes/templates/layout.html:    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+./target/classes/templates/layout.html:    <title>BookStore Management</title>
+./target/classes/templates/layout.html:    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css">
+./target/classes/templates/layout.html:</head>
+./target/classes/templates/layout.html:<body>
+./target/classes/templates/layout.html:<section class="hero is-primary">
+./target/classes/templates/layout.html:    <div class="hero-body">
+./target/classes/templates/layout.html:        <p class="title">BookStore Management</p>
+./target/classes/templates/layout.html:        <p class="subtitle">Manage your books, authors, categories, and publishers</p>
+./target/classes/templates/layout.html:    </div>
+./target/classes/templates/layout.html:</section>
+./target/classes/templates/layout.html:
+./target/classes/templates/layout.html:<nav class="navbar is-light">
+./target/classes/templates/layout.html:    <div class="navbar-menu">
+./target/classes/templates/layout.html:        <div class="navbar-start">
+./target/classes/templates/layout.html:            <a class="navbar-item" th:href="@{/}">Dashboard</a>
+./target/classes/templates/layout.html:            <a class="navbar-item" th:href="@{/books}">Books</a>
+./target/classes/templates/layout.html:            <a class="navbar-item" th:href="@{/authors}">Authors</a>
+./target/classes/templates/layout.html:            <a class="navbar-item" th:href="@{/categories}">Categories</a>
+./target/classes/templates/layout.html:            <a class="navbar-item" th:href="@{/publishers}">Publishers</a>
+./target/classes/templates/layout.html:        </div>
+./target/classes/templates/layout.html:    </div>
+./target/classes/templates/layout.html:</nav>
+./target/classes/templates/layout.html:
+./target/classes/templates/layout.html:<div class="container mt-5">
+./target/classes/templates/layout.html:    <div th:insert="${content}"></div>
+./target/classes/templates/layout.html:</div>
+./target/classes/templates/layout.html:</body>
+./target/classes/templates/layout.html:</html>
+./target/classes/templates/index.html:<!DOCTYPE html>
+./target/classes/templates/index.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./target/classes/templates/index.html:<head th:replace="layout.html :: head"></head>
+./target/classes/templates/index.html:<body>
+./target/classes/templates/index.html:<section class="section">
+./target/classes/templates/index.html:    <h1 class="title">Welcome to the BookStore Dashboard</h1>
+./target/classes/templates/index.html:    <div class="columns">
+./target/classes/templates/index.html:        <div class="column">
+./target/classes/templates/index.html:            <a class="button is-link is-large is-fullwidth" th:href="@{/books}">Manage Books</a>
+./target/classes/templates/index.html:        </div>
+./target/classes/templates/index.html:        <div class="column">
+./target/classes/templates/index.html:            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}">Manage Authors</a>
+./target/classes/templates/index.html:        </div>
+./target/classes/templates/index.html:        <div class="column">
+./target/classes/templates/index.html:            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}">Manage Categories</a>
+./target/classes/templates/index.html:        </div>
+./target/classes/templates/index.html:        <div class="column">
+./target/classes/templates/index.html:            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}">Manage Publishers</a>
+./target/classes/templates/index.html:        </div>
+./target/classes/templates/index.html:    </div>
+./target/classes/templates/index.html:</section>
+./target/classes/templates/index.html:</body>
+./target/classes/templates/index.html:</html>
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:package com.example.TheBookStore;
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:import org.junit.jupiter.api.Test;
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:import org.springframework.boot.test.context.SpringBootTest;
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:@SpringBootTest
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:class TheBookStoreApplicationTests {
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:	@Test
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:	void contextLoads() {
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:	}
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:
+./src/test/java/com/example/TheBookStore/TheBookStoreApplicationTests.java:}
+./src/main/java/com/example/TheBookStore/models/Book.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.DecimalMin;
+./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.Digits;
+./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.Min;
+./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:import java.math.BigDecimal;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Book.java:@Table(name = "books")
+./src/main/java/com/example/TheBookStore/models/Book.java:public class Book {
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Book.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private Long bookId;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @NotBlank(message = "Title is required")
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private String title;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @NotBlank(message = "Author is required")
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private String author;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @NotBlank(message = "ISBN is required")
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private String isbn;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    private String genre;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Digits(integer = 6, fraction = 2, message = "Price must be a valid amount")
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private BigDecimal price;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/models/Book.java:    @JoinColumn(name = "publisher_id", nullable = false)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private Publisher publisher;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Min(value = 0, message = "Stock quantity must be 0 or greater")
+./src/main/java/com/example/TheBookStore/models/Book.java:    private int stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public Long getBookId() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return bookId;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setBookId(Long boookID) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.bookId = boookID;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public String getTitle() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return title;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setTitle(String title) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.title = title;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public String getAuthor() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return author;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setAuthor(String author) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.author = author;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public String getIsbn() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return isbn;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setIsbn(String isbn) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.isbn = isbn;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public String getGenre() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return genre;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setGenre(String genre) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.genre = genre;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public BigDecimal getPrice() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return price;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setPrice(BigDecimal price) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.price = price;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public Publisher getPublisher() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return publisher;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setPublisher(Publisher publisher) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.publisher = publisher;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public int getStockQuantity() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setStockQuantity(int stockQuantity) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.stockQuantity = stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:}
+./src/main/java/com/example/TheBookStore/models/Author.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Author.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Author.java:import jakarta.validation.constraints.Past;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:import java.time.LocalDate;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Author.java:@Table(name = "authors")
+./src/main/java/com/example/TheBookStore/models/Author.java:public class Author {
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Author.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Author.java:    private Long authorId;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @NotBlank(message = "Name is required")
+./src/main/java/com/example/TheBookStore/models/Author.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Author.java:    private String name;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @Lob
+./src/main/java/com/example/TheBookStore/models/Author.java:    private String bio;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @Past(message = "Birthdate must be a past date")
+./src/main/java/com/example/TheBookStore/models/Author.java:    private LocalDate birthdate;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public Long getAuthorId() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return authorId;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setAuthorId(Long authorID) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.authorId = authorID;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public String getName() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return name;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setName(String name) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.name = name;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public String getBio() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return bio;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setBio(String bio) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.bio = bio;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public LocalDate getBirthdate() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return birthdate;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setBirthdate(LocalDate birthdate) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.birthdate = birthdate;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:}
+./src/main/java/com/example/TheBookStore/models/Category.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Category.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Category.java:@Table(name = "categories")
+./src/main/java/com/example/TheBookStore/models/Category.java:public class Category {
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Category.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Category.java:    private Long categoryId;
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    @NotBlank(message = "Name is required")
+./src/main/java/com/example/TheBookStore/models/Category.java:    @Column(nullable = false, unique = true)
+./src/main/java/com/example/TheBookStore/models/Category.java:    private String name;
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    @NotBlank(message = "Description is required")
+./src/main/java/com/example/TheBookStore/models/Category.java:    @Column(nullable = false, unique = true)
+./src/main/java/com/example/TheBookStore/models/Category.java:    private String description;
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    public Long getCategoryId() {
+./src/main/java/com/example/TheBookStore/models/Category.java:        return categoryId;
+./src/main/java/com/example/TheBookStore/models/Category.java:    }
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    public void setCategoryId(Long categoryID) {
+./src/main/java/com/example/TheBookStore/models/Category.java:        this.categoryId = categoryID;
+./src/main/java/com/example/TheBookStore/models/Category.java:    }
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    public String getName() {
+./src/main/java/com/example/TheBookStore/models/Category.java:        return name;
+./src/main/java/com/example/TheBookStore/models/Category.java:    }
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    public void setName(String name) {
+./src/main/java/com/example/TheBookStore/models/Category.java:        this.name = name;
+./src/main/java/com/example/TheBookStore/models/Category.java:    }
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    public String getDescription() {
+./src/main/java/com/example/TheBookStore/models/Category.java:        return description;
+./src/main/java/com/example/TheBookStore/models/Category.java:    }
+./src/main/java/com/example/TheBookStore/models/Category.java:
+./src/main/java/com/example/TheBookStore/models/Category.java:    public void setDescription(String description) {
+./src/main/java/com/example/TheBookStore/models/Category.java:        this.description = description;
+./src/main/java/com/example/TheBookStore/models/Category.java:    }
+./src/main/java/com/example/TheBookStore/models/Category.java:}
+./src/main/java/com/example/TheBookStore/models/Publisher.java:package com.example.TheBookStore.models;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:@Entity
+./src/main/java/com/example/TheBookStore/models/Publisher.java:@Table(name = "publishers")
+./src/main/java/com/example/TheBookStore/models/Publisher.java:public class Publisher {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Id
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private Long publisherId;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @NotBlank(message = "Name is required")
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private String name;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @NotBlank(message = "Address is required")
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private String address;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @NotBlank(message = "Contact information is required")
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Column(nullable = false)
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private String contactInfo;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public Long getPublisherId() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return publisherId;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setPublisherId(Long publisherID) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.publisherId = publisherID;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public String getName() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return name;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setName(String name) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.name = name;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public String getAddress() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return address;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setAddress(String address) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.address = address;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public String getContactInfo() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return contactInfo;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setContactInfo(String contactInfo) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.contactInfo = contactInfo;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:}
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:package com.example.TheBookStore.relationships;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:import com.example.TheBookStore.models.Book;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:import com.example.TheBookStore.models.Category;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:@Entity
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:@Table(name = "books_have_categories")
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:public class BookCategory {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    @Id
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    private Long id;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    @JoinColumn(name = "book_id", nullable = false)
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    private Book book;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    @JoinColumn(name = "category_id", nullable = false)
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    private Category category;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    public Long getId() {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:        return id;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    public void setId(Long id) {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:        this.id = id;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    public Book getBook() {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:        return book;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    public void setBook(Book book) {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:        this.book = book;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    public Category getCategory() {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:        return category;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    public void setCategory(Category category) {
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:        this.category = category;
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:}
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:package com.example.TheBookStore.relationships;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import com.example.TheBookStore.models.Author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import com.example.TheBookStore.models.Book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import jakarta.persistence.*;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:@Entity
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:@Table(name = "books_have_authors")
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:public class BookAuthor {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @Id
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    private Long id;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @JoinColumn(name = "author_id", nullable = false)
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    private Author author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @ManyToOne
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @JoinColumn(name = "book_id", nullable = false)
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    private Book book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public Long getId() {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        return id;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public void setId(Long id) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        this.id = id;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public Author getAuthor() {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        return author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public void setAuthor(Author author) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        this.author = author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public Book getBook() {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        return book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public void setBook(Book book) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        this.book = book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:}
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:package com.example.TheBookStore;
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:import org.springframework.boot.SpringApplication;
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:import org.springframework.boot.autoconfigure.SpringBootApplication;
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:@SpringBootApplication
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:public class TheBookStoreApplication {
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:	public static void main(String[] args) {
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:		SpringApplication.run(TheBookStoreApplication.class, args);
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:	}
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:
+./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:}
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:import com.example.TheBookStore.models.Publisher;
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:import org.springframework.stereotype.Repository;
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:@Repository
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:public interface PublisherRepository extends JpaRepository<Publisher, Long> {
+./src/main/java/com/example/TheBookStore/repositories/PublisherRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:import com.example.TheBookStore.relationships.BookAuthor;
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:import org.springframework.stereotype.Repository;
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:@Repository
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:public interface BookAuthorRepository extends JpaRepository<BookAuthor, Long> {
+./src/main/java/com/example/TheBookStore/repositories/BookAuthorRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:import com.example.TheBookStore.models.Category;
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:import org.springframework.stereotype.Repository;
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:@Repository
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:public interface CategoryRepository extends JpaRepository <Category, Long> {
+./src/main/java/com/example/TheBookStore/repositories/CategoryRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:import com.example.TheBookStore.models.Author;
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:import org.springframework.stereotype.Repository;
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:@Repository
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:public interface AuthorRepository extends JpaRepository<Author, Long> {
+./src/main/java/com/example/TheBookStore/repositories/AuthorRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:import com.example.TheBookStore.models.Book;
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:import org.springframework.stereotype.Repository;
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:@Repository
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:public interface BookRepository extends JpaRepository<Book, Long> {
+./src/main/java/com/example/TheBookStore/repositories/BookRepository.java:}
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:package com.example.TheBookStore.repositories;
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:import com.example.TheBookStore.relationships.BookCategory;
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:import org.springframework.stereotype.Repository;
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:@Repository
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:public interface BookCategoryRepository extends JpaRepository<BookCategory, Long> {
+./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:}
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:package com.example.TheBookStore.controllers;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import com.example.TheBookStore.models.Book;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import com.example.TheBookStore.models.Publisher;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import com.example.TheBookStore.repositories.AuthorRepository;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import com.example.TheBookStore.repositories.BookRepository;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import com.example.TheBookStore.repositories.PublisherRepository;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import org.springframework.beans.factory.annotation.Autowired;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import org.springframework.stereotype.Controller;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import org.springframework.ui.Model;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:import org.springframework.web.bind.annotation.*;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:@Controller
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:@RequestMapping("/books")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:public class BookController {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @Autowired
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    private BookRepository bookRepository;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @Autowired
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    private AuthorRepository authorRepository;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @Autowired
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    private PublisherRepository publisherRepository;
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @GetMapping
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String listBooks(Model model) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("books", bookRepository.findAll());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "books/list";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @GetMapping("/new")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String newBookForm(Model model) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("book", new Book());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("authors", authorRepository.findAll());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("publishers", publisherRepository.findAll());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "books/form";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @PostMapping("/save")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String saveBook(@ModelAttribute Book book, @RequestParam Long publisherId) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        Publisher publisher = publisherRepository.findById(publisherId)
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:                .orElseThrow(() -> new IllegalArgumentException("Invalid publisher ID: " + publisherId));
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        book.setPublisher(publisher);
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        bookRepository.save(book);
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "redirect:/books";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @GetMapping("/edit/{id}")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String editBookForm(@PathVariable Long id, Model model) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("book", bookRepository.findById(id).orElse(null));
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("authors", authorRepository.findAll());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        model.addAttribute("publishers", publisherRepository.findAll());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "books/form";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @PostMapping("/update/{id}")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String updateBook(@PathVariable Long id, @ModelAttribute Book book, @RequestParam Long publisherId) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        Book existingBook = bookRepository.findById(id)
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:                .orElseThrow(() -> new IllegalArgumentException("Invalid book ID: " + id));
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setTitle(book.getTitle());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setAuthor(book.getAuthor());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setIsbn(book.getIsbn());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setGenre(book.getGenre());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setPrice(book.getPrice());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setStockQuantity(book.getStockQuantity());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        Publisher publisher = publisherRepository.findById(publisherId)
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:                .orElseThrow(() -> new IllegalArgumentException("Invalid publisher ID: " + publisherId));
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setPublisher(publisher);
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        bookRepository.save(existingBook);
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "redirect:/books";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    @GetMapping("/delete/{id}")
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    public String deleteBook(@PathVariable Long id) {
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        bookRepository.deleteById(id);
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:        return "redirect:/books";
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:    }
+./src/main/java/com/example/TheBookStore/controllers/BookController.java:}
+./src/main/resources/application.properties:spring.application.name=TheBookStore
+./src/main/resources/application.properties:
+./src/main/resources/application.properties:spring.datasource.url=jdbc:mysql://localhost:3306/MyBookStore
+./src/main/resources/application.properties:spring.datasource.username=admin
+./src/main/resources/application.properties:spring.datasource.password=1q2w3e4r
+./src/main/resources/application.properties:
+./src/main/resources/application.properties:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/templates/books/list.html:<!DOCTYPE html>
+./src/main/resources/templates/books/list.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./src/main/resources/templates/books/list.html:<head th:replace="~{layout.html :: head}"></head>
+./src/main/resources/templates/books/list.html:<body>
+./src/main/resources/templates/books/list.html:<section class="section">
+./src/main/resources/templates/books/list.html:    <h1 class="title">Books</h1>
+./src/main/resources/templates/books/list.html:    <a class="button is-primary mb-3" th:href="@{/books/new}">Add New Book</a>
+./src/main/resources/templates/books/list.html:    <table class="table is-fullwidth">
+./src/main/resources/templates/books/list.html:        <thead>
+./src/main/resources/templates/books/list.html:        <tr>
+./src/main/resources/templates/books/list.html:            <th>ID</th>
+./src/main/resources/templates/books/list.html:            <th>Title</th>
+./src/main/resources/templates/books/list.html:            <th>Author</th>
+./src/main/resources/templates/books/list.html:            <th>Price</th>
+./src/main/resources/templates/books/list.html:            <th>Actions</th>
+./src/main/resources/templates/books/list.html:        </tr>
+./src/main/resources/templates/books/list.html:        </thead>
+./src/main/resources/templates/books/list.html:        <tbody>
+./src/main/resources/templates/books/list.html:        <tr th:each="book : ${books}">
+./src/main/resources/templates/books/list.html:            <td th:text="${book.bookId}"></td>
+./src/main/resources/templates/books/list.html:            <td th:text="${book.title}"></td>
+./src/main/resources/templates/books/list.html:            <td th:text="${book.author}"></td>
+./src/main/resources/templates/books/list.html:            <td th:text="${book.price}"></td>
+./src/main/resources/templates/books/list.html:            <td>
+./src/main/resources/templates/books/list.html:                <a class="button is-small is-link" th:href="@{'/books/edit/' + ${book.bookId}}">Edit</a>
+./src/main/resources/templates/books/list.html:                <a class="button is-small is-danger" th:href="@{'/books/delete/' + ${book.bookId}}">Delete</a>
+./src/main/resources/templates/books/list.html:            </td>
+./src/main/resources/templates/books/list.html:        </tr>
+./src/main/resources/templates/books/list.html:        </tbody>
+./src/main/resources/templates/books/list.html:    </table>
+./src/main/resources/templates/books/list.html:</section>
+./src/main/resources/templates/books/list.html:</body>
+./src/main/resources/templates/books/list.html:</html>
+./src/main/resources/templates/books/form.html:<!DOCTYPE html>
+./src/main/resources/templates/books/form.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./src/main/resources/templates/books/form.html:<head th:replace="layout.html :: head"></head>
+./src/main/resources/templates/books/form.html:<body>
+./src/main/resources/templates/books/form.html:<section class="section">
+./src/main/resources/templates/books/form.html:    <h1 class="title" th:text="${book != null ? 'Edit Book' : 'Add Book'}"></h1>
+./src/main/resources/templates/books/form.html:    <form th:action="${book != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">Title</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <input class="input" type="text" name="title" th:value="${book?.title}" required>
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">Author</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <div class="select">
+./src/main/resources/templates/books/form.html:                    <select name="author" required>
+./src/main/resources/templates/books/form.html:                        <option value="" disabled th:if="${book?.author == null}" selected>Select an author</option>
+./src/main/resources/templates/books/form.html:                        <option th:each="author : ${authors}"
+./src/main/resources/templates/books/form.html:                                th:value="${author.name}"
+./src/main/resources/templates/books/form.html:                                th:text="${author.name}"
+./src/main/resources/templates/books/form.html:                                th:selected="${book?.author == author.name}"></option>
+./src/main/resources/templates/books/form.html:                    </select>
+./src/main/resources/templates/books/form.html:                </div>
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">ISBN</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <input class="input" type="text" name="isbn" th:value="${book?.isbn}" required>
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">Genre</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <input class="input" type="text" name="genre" th:value="${book?.genre}">
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">Price</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <input class="input" type="number" name="price" step="0.01" th:value="${book?.price}" required>
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">Publisher</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <div class="select">
+./src/main/resources/templates/books/form.html:                    <select name="publisherId" required>
+./src/main/resources/templates/books/form.html:                        <option value="" disabled th:if="${book?.publisher == null}" selected>Select a publisher</option>
+./src/main/resources/templates/books/form.html:                        <option th:each="publisher : ${publishers}"
+./src/main/resources/templates/books/form.html:                                th:value="${publisher.publisherId}"
+./src/main/resources/templates/books/form.html:                                th:text="${publisher.name}"
+./src/main/resources/templates/books/form.html:                                th:selected="${book?.publisher?.publisherId == publisher.publisherId}">
+./src/main/resources/templates/books/form.html:
+./src/main/resources/templates/books/form.html:                        </option>
+./src/main/resources/templates/books/form.html:                    </select>
+./src/main/resources/templates/books/form.html:                </div>
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <label class="label">Stock Quantity</label>
+./src/main/resources/templates/books/form.html:            <div class="control">
+./src/main/resources/templates/books/form.html:                <input class="input" type="number" name="stockQuantity" th:value="${book?.stockQuantity}" required>
+./src/main/resources/templates/books/form.html:            </div>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:        <div class="field">
+./src/main/resources/templates/books/form.html:            <button class="button is-link" type="submit">Save</button>
+./src/main/resources/templates/books/form.html:        </div>
+./src/main/resources/templates/books/form.html:    </form>
+./src/main/resources/templates/books/form.html:</section>
+./src/main/resources/templates/books/form.html:</body>
+./src/main/resources/templates/books/form.html:</html>
+./src/main/resources/templates/layout.html:<!DOCTYPE html>
+./src/main/resources/templates/layout.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./src/main/resources/templates/layout.html:<head>
+./src/main/resources/templates/layout.html:    <meta charset="UTF-8">
+./src/main/resources/templates/layout.html:    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+./src/main/resources/templates/layout.html:    <title>BookStore Management</title>
+./src/main/resources/templates/layout.html:    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css">
+./src/main/resources/templates/layout.html:</head>
+./src/main/resources/templates/layout.html:<body>
+./src/main/resources/templates/layout.html:<section class="hero is-primary">
+./src/main/resources/templates/layout.html:    <div class="hero-body">
+./src/main/resources/templates/layout.html:        <p class="title">BookStore Management</p>
+./src/main/resources/templates/layout.html:        <p class="subtitle">Manage your books, authors, categories, and publishers</p>
+./src/main/resources/templates/layout.html:    </div>
+./src/main/resources/templates/layout.html:</section>
+./src/main/resources/templates/layout.html:
+./src/main/resources/templates/layout.html:<nav class="navbar is-light">
+./src/main/resources/templates/layout.html:    <div class="navbar-menu">
+./src/main/resources/templates/layout.html:        <div class="navbar-start">
+./src/main/resources/templates/layout.html:            <a class="navbar-item" th:href="@{/}">Dashboard</a>
+./src/main/resources/templates/layout.html:            <a class="navbar-item" th:href="@{/books}">Books</a>
+./src/main/resources/templates/layout.html:            <a class="navbar-item" th:href="@{/authors}">Authors</a>
+./src/main/resources/templates/layout.html:            <a class="navbar-item" th:href="@{/categories}">Categories</a>
+./src/main/resources/templates/layout.html:            <a class="navbar-item" th:href="@{/publishers}">Publishers</a>
+./src/main/resources/templates/layout.html:        </div>
+./src/main/resources/templates/layout.html:    </div>
+./src/main/resources/templates/layout.html:</nav>
+./src/main/resources/templates/layout.html:
+./src/main/resources/templates/layout.html:<div class="container mt-5">
+./src/main/resources/templates/layout.html:    <div th:insert="${content}"></div>
+./src/main/resources/templates/layout.html:</div>
+./src/main/resources/templates/layout.html:</body>
+./src/main/resources/templates/layout.html:</html>
+./src/main/resources/templates/index.html:<!DOCTYPE html>
+./src/main/resources/templates/index.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
+./src/main/resources/templates/index.html:<head th:replace="layout.html :: head"></head>
+./src/main/resources/templates/index.html:<body>
+./src/main/resources/templates/index.html:<section class="section">
+./src/main/resources/templates/index.html:    <h1 class="title">Welcome to the BookStore Dashboard</h1>
+./src/main/resources/templates/index.html:    <div class="columns">
+./src/main/resources/templates/index.html:        <div class="column">
+./src/main/resources/templates/index.html:            <a class="button is-link is-large is-fullwidth" th:href="@{/books}">Manage Books</a>
+./src/main/resources/templates/index.html:        </div>
+./src/main/resources/templates/index.html:        <div class="column">
+./src/main/resources/templates/index.html:            <a class="button is-primary is-large is-fullwidth" th:href="@{/authors}">Manage Authors</a>
+./src/main/resources/templates/index.html:        </div>
+./src/main/resources/templates/index.html:        <div class="column">
+./src/main/resources/templates/index.html:            <a class="button is-warning is-large is-fullwidth" th:href="@{/categories}">Manage Categories</a>
+./src/main/resources/templates/index.html:        </div>
+./src/main/resources/templates/index.html:        <div class="column">
+./src/main/resources/templates/index.html:            <a class="button is-danger is-large is-fullwidth" th:href="@{/publishers}">Manage Publishers</a>
+./src/main/resources/templates/index.html:        </div>
+./src/main/resources/templates/index.html:    </div>
+./src/main/resources/templates/index.html:</section>
+./src/main/resources/templates/index.html:</body>
+./src/main/resources/templates/index.html:</html>
