@@ -67,7 +67,7 @@ public class BookController {
 
 
         existingBook.setTitle(book.getTitle());
-        existingBook.setAuthor(book.getAuthor());
+//        existingBook.setAuthor(book.getAuthor());
         existingBook.setIsbn(book.getIsbn());
         existingBook.setGenre(book.getGenre());
         existingBook.setPrice(book.getPrice());

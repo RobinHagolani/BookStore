@@ -24,9 +24,9 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false)
-    private Author author;
+//    @ManyToOne
+//    @JoinColumn(name = "author_id", nullable = false)
+//    private Author author;
 
     @NotBlank(message = "ISBN is required")
     @Column(nullable = false)
@@ -67,13 +67,13 @@ public class Book {
         this.title = title;
     }
 
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
+//    public Author getAuthor() {
+//        return author;
+//    }
+//
+//    public void setAuthor(Author author) {
+//        this.author = author;
+//    }
 
     public String getIsbn() {
         return isbn;
