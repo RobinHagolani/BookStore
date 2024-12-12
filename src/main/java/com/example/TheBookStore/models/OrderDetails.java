@@ -1,8 +1,6 @@
-package com.example.TheBookStore.relationships;
+package com.example.TheBookStore.models;
 
 
-import com.example.TheBookStore.models.Book;
-import com.example.TheBookStore.models.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

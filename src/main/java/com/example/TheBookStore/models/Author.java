@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -28,6 +29,9 @@ public class Author {
     @Past(message = "Birthdate must be a past date")
     private LocalDate birthdate;
 
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books;
+
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
@@ -35,6 +39,18 @@ public class Author {
     @UpdateTimestamp
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modifiedAt;
+
+
+
+
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
 
     public Long getAuthorId() {
         return authorId;

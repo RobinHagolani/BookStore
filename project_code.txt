@@ -24,6 +24,7 @@
 ./target/classes/application.properties:spring.datasource.password=1q2w3e4r
 ./target/classes/application.properties:
 ./target/classes/application.properties:spring.jpa.hibernate.ddl-auto=update
+./target/classes/application.properties:spring.data.rest.basePath=/api
 ./target/classes/templates/books/list.html:<!DOCTYPE html>
 ./target/classes/templates/books/list.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
 ./target/classes/templates/books/list.html:<head th:replace="~{layout.html :: head}"></head>
@@ -63,7 +64,8 @@
 ./target/classes/templates/books/form.html:<body>
 ./target/classes/templates/books/form.html:<section class="section">
 ./target/classes/templates/books/form.html:    <h1 class="title" th:text="${book != null ? 'Edit Book' : 'Add Book'}"></h1>
-./target/classes/templates/books/form.html:    <form th:action="${book != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+./target/classes/templates/books/form.html:    <form th:action="${book?.bookId != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+./target/classes/templates/books/form.html:    <input type="hidden" name="bookId" th:value="${book?.bookId}">
 ./target/classes/templates/books/form.html:        <div class="field">
 ./target/classes/templates/books/form.html:            <label class="label">Title</label>
 ./target/classes/templates/books/form.html:            <div class="control">
@@ -208,8 +210,12 @@
 ./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.Digits;
 ./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.Min;
 ./src/main/java/com/example/TheBookStore/models/Book.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Book.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Book.java:import org.hibernate.annotations.UpdateTimestamp;
 ./src/main/java/com/example/TheBookStore/models/Book.java:
 ./src/main/java/com/example/TheBookStore/models/Book.java:import java.math.BigDecimal;
+./src/main/java/com/example/TheBookStore/models/Book.java:import java.time.LocalDateTime;
+./src/main/java/com/example/TheBookStore/models/Book.java:import java.util.List;
 ./src/main/java/com/example/TheBookStore/models/Book.java:
 ./src/main/java/com/example/TheBookStore/models/Book.java:@Entity
 ./src/main/java/com/example/TheBookStore/models/Book.java:@Table(name = "books")
@@ -223,9 +229,9 @@
 ./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
 ./src/main/java/com/example/TheBookStore/models/Book.java:    private String title;
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    @NotBlank(message = "Author is required")
-./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
-./src/main/java/com/example/TheBookStore/models/Book.java:    private String author;
+./src/main/java/com/example/TheBookStore/models/Book.java:    @ManyToMany
+./src/main/java/com/example/TheBookStore/models/Book.java:    @JoinColumn(name = "author_id", nullable = false)
+./src/main/java/com/example/TheBookStore/models/Book.java:    private List<Author> authors;
 ./src/main/java/com/example/TheBookStore/models/Book.java:
 ./src/main/java/com/example/TheBookStore/models/Book.java:    @NotBlank(message = "ISBN is required")
 ./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(nullable = false)
@@ -242,15 +248,20 @@
 ./src/main/java/com/example/TheBookStore/models/Book.java:    @JoinColumn(name = "publisher_id", nullable = false)
 ./src/main/java/com/example/TheBookStore/models/Book.java:    private Publisher publisher;
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    @Min(value = 0, message = "Stock quantity must be 0 or greater")
-./src/main/java/com/example/TheBookStore/models/Book.java:    private int stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Book.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Book.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Book.java:    @Column(columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Book.java:    private LocalDateTime modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Book.java:
 ./src/main/java/com/example/TheBookStore/models/Book.java:    public Long getBookId() {
 ./src/main/java/com/example/TheBookStore/models/Book.java:        return bookId;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    public void setBookId(Long boookID) {
-./src/main/java/com/example/TheBookStore/models/Book.java:        this.bookId = boookID;
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setBookId(Long bookId) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.bookId = bookId;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
 ./src/main/java/com/example/TheBookStore/models/Book.java:    public String getTitle() {
@@ -261,12 +272,12 @@
 ./src/main/java/com/example/TheBookStore/models/Book.java:        this.title = title;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    public String getAuthor() {
-./src/main/java/com/example/TheBookStore/models/Book.java:        return author;
+./src/main/java/com/example/TheBookStore/models/Book.java:    public List<Author> getAuthors() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return authors;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    public void setAuthor(String author) {
-./src/main/java/com/example/TheBookStore/models/Book.java:        this.author = author;
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setAuthors(List<Author> authors) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.authors = authors;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
 ./src/main/java/com/example/TheBookStore/models/Book.java:    public String getIsbn() {
@@ -301,12 +312,20 @@
 ./src/main/java/com/example/TheBookStore/models/Book.java:        this.publisher = publisher;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    public int getStockQuantity() {
-./src/main/java/com/example/TheBookStore/models/Book.java:        return stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Book.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return createdAt;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:
-./src/main/java/com/example/TheBookStore/models/Book.java:    public void setStockQuantity(int stockQuantity) {
-./src/main/java/com/example/TheBookStore/models/Book.java:        this.stockQuantity = stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Book.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Book.java:    }
+./src/main/java/com/example/TheBookStore/models/Book.java:
+./src/main/java/com/example/TheBookStore/models/Book.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Book.java:        this.modifiedAt = modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Book.java:    }
 ./src/main/java/com/example/TheBookStore/models/Book.java:}
 ./src/main/java/com/example/TheBookStore/models/Author.java:package com.example.TheBookStore.models;
@@ -315,8 +334,12 @@
 ./src/main/java/com/example/TheBookStore/models/Author.java:import jakarta.persistence.*;
 ./src/main/java/com/example/TheBookStore/models/Author.java:import jakarta.validation.constraints.NotBlank;
 ./src/main/java/com/example/TheBookStore/models/Author.java:import jakarta.validation.constraints.Past;
+./src/main/java/com/example/TheBookStore/models/Author.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Author.java:import org.hibernate.annotations.UpdateTimestamp;
 ./src/main/java/com/example/TheBookStore/models/Author.java:
 ./src/main/java/com/example/TheBookStore/models/Author.java:import java.time.LocalDate;
+./src/main/java/com/example/TheBookStore/models/Author.java:import java.time.LocalDateTime;
+./src/main/java/com/example/TheBookStore/models/Author.java:import java.util.List;
 ./src/main/java/com/example/TheBookStore/models/Author.java:
 ./src/main/java/com/example/TheBookStore/models/Author.java:@Entity
 ./src/main/java/com/example/TheBookStore/models/Author.java:@Table(name = "authors")
@@ -336,12 +359,31 @@
 ./src/main/java/com/example/TheBookStore/models/Author.java:    @Past(message = "Birthdate must be a past date")
 ./src/main/java/com/example/TheBookStore/models/Author.java:    private LocalDate birthdate;
 ./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @ManyToMany
+./src/main/java/com/example/TheBookStore/models/Author.java:    private List<Book> books;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Author.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Author.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Author.java:    @Column(columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Author.java:    private LocalDateTime modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public List<Book> getBooks() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return books;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setBooks(List<Book> books) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.books = books;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
 ./src/main/java/com/example/TheBookStore/models/Author.java:    public Long getAuthorId() {
 ./src/main/java/com/example/TheBookStore/models/Author.java:        return authorId;
 ./src/main/java/com/example/TheBookStore/models/Author.java:    }
 ./src/main/java/com/example/TheBookStore/models/Author.java:
-./src/main/java/com/example/TheBookStore/models/Author.java:    public void setAuthorId(Long authorID) {
-./src/main/java/com/example/TheBookStore/models/Author.java:        this.authorId = authorID;
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setAuthorId(Long authorId) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.authorId = authorId;
 ./src/main/java/com/example/TheBookStore/models/Author.java:    }
 ./src/main/java/com/example/TheBookStore/models/Author.java:
 ./src/main/java/com/example/TheBookStore/models/Author.java:    public String getName() {
@@ -367,6 +409,22 @@
 ./src/main/java/com/example/TheBookStore/models/Author.java:    public void setBirthdate(LocalDate birthdate) {
 ./src/main/java/com/example/TheBookStore/models/Author.java:        this.birthdate = birthdate;
 ./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return createdAt;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Author.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
+./src/main/java/com/example/TheBookStore/models/Author.java:
+./src/main/java/com/example/TheBookStore/models/Author.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Author.java:        this.modifiedAt = modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Author.java:    }
 ./src/main/java/com/example/TheBookStore/models/Author.java:}
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:package com.example.TheBookStore.models;
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:
@@ -374,8 +432,11 @@
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:import jakarta.persistence.*;
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:import jakarta.validation.constraints.Min;
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:import jakarta.validation.constraints.NotNull;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import org.hibernate.annotations.UpdateTimestamp;
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:import java.time.LocalDate;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:import java.time.LocalDateTime;
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:@Entity
@@ -398,12 +459,71 @@
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Column(name = "RestockDate")
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:    private LocalDate RestockDate;
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    @Column(columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    private LocalDateTime modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public Long getInventoryId() {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        return inventoryId;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public void setInventoryId(Long inventoryId) {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        this.inventoryId = inventoryId;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public Book getBook() {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        return book;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public void setBook(Book book) {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        this.book = book;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public int getStockQuantity() {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        return StockQuantity;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public void setStockQuantity(int stockQuantity) {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        StockQuantity = stockQuantity;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public LocalDate getRestockDate() {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        return RestockDate;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public void setRestockDate(LocalDate restockDate) {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        RestockDate = restockDate;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        return createdAt;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
+./src/main/java/com/example/TheBookStore/models/Inventory.java:
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Inventory.java:        this.modifiedAt = modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Inventory.java:    }
 ./src/main/java/com/example/TheBookStore/models/Inventory.java:}
 ./src/main/java/com/example/TheBookStore/models/Customer.java:package com.example.TheBookStore.models;
 ./src/main/java/com/example/TheBookStore/models/Customer.java:
 ./src/main/java/com/example/TheBookStore/models/Customer.java:import jakarta.persistence.*;
 ./src/main/java/com/example/TheBookStore/models/Customer.java:import jakarta.validation.constraints.Email;
 ./src/main/java/com/example/TheBookStore/models/Customer.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Customer.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Customer.java:import org.hibernate.annotations.UpdateTimestamp;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:import java.time.LocalDateTime;
 ./src/main/java/com/example/TheBookStore/models/Customer.java:
 ./src/main/java/com/example/TheBookStore/models/Customer.java:@Entity
 ./src/main/java/com/example/TheBookStore/models/Customer.java:@Table(name = "customers")
@@ -429,6 +549,14 @@
 ./src/main/java/com/example/TheBookStore/models/Customer.java:    @NotBlank(message = "Address is required")
 ./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(nullable = false)
 ./src/main/java/com/example/TheBookStore/models/Customer.java:    private String address;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Customer.java:    @Column(columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Customer.java:    private LocalDateTime modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Customer.java:
 ./src/main/java/com/example/TheBookStore/models/Customer.java:    public Long getCustomerId() {
 ./src/main/java/com/example/TheBookStore/models/Customer.java:        return customerId;
@@ -469,6 +597,22 @@
 ./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setAddress(String address) {
 ./src/main/java/com/example/TheBookStore/models/Customer.java:        this.address = address;
 ./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return createdAt;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
+./src/main/java/com/example/TheBookStore/models/Customer.java:
+./src/main/java/com/example/TheBookStore/models/Customer.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Customer.java:        this.modifiedAt = modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Customer.java:    }
 ./src/main/java/com/example/TheBookStore/models/Customer.java:}
 ./src/main/java/com/example/TheBookStore/models/Review.java:package com.example.TheBookStore.models;
 ./src/main/java/com/example/TheBookStore/models/Review.java:
@@ -503,15 +647,15 @@
 ./src/main/java/com/example/TheBookStore/models/Review.java:    @Max(value = 5, message = "Rating must be at most 5")
 ./src/main/java/com/example/TheBookStore/models/Review.java:    private int rating;
 ./src/main/java/com/example/TheBookStore/models/Review.java:
-./src/main/java/com/example/TheBookStore/models/Review.java:    @NotBlank(message = "Comment is required")
-./src/main/java/com/example/TheBookStore/models/Review.java:    @Column(length = 500) // Assuming comments should be concise
+./src/main/java/com/example/TheBookStore/models/Review.java:
 ./src/main/java/com/example/TheBookStore/models/Review.java:    private String comment;
 ./src/main/java/com/example/TheBookStore/models/Review.java:
 ./src/main/java/com/example/TheBookStore/models/Review.java:    @CreationTimestamp
-./src/main/java/com/example/TheBookStore/models/Review.java:    @Column(updatable = false)
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
 ./src/main/java/com/example/TheBookStore/models/Review.java:    private LocalDateTime createdAt;
 ./src/main/java/com/example/TheBookStore/models/Review.java:
 ./src/main/java/com/example/TheBookStore/models/Review.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Review.java:    @Column(columnDefinition = "TIMESTAMP")
 ./src/main/java/com/example/TheBookStore/models/Review.java:    private LocalDateTime modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Review.java:
 ./src/main/java/com/example/TheBookStore/models/Review.java:    public Long getReviewId() {
@@ -621,6 +765,10 @@
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:import jakarta.persistence.*;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:import jakarta.validation.constraints.NotBlank;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:import org.hibernate.annotations.UpdateTimestamp;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:import java.time.LocalDateTime;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:@Entity
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:@Table(name = "publishers")
@@ -640,14 +788,22 @@
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    @NotBlank(message = "Contact information is required")
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Column(nullable = false)
-./src/main/java/com/example/TheBookStore/models/Publisher.java:    private String contactInfo;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private String contactName;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    @Column(columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    private LocalDateTime modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    public Long getPublisherId() {
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:        return publisherId;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
-./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setPublisherId(Long publisherID) {
-./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.publisherId = publisherID;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setPublisherId(Long publisherId) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.publisherId = publisherId;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    public String getName() {
@@ -666,12 +822,28 @@
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.address = address;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
-./src/main/java/com/example/TheBookStore/models/Publisher.java:    public String getContactInfo() {
-./src/main/java/com/example/TheBookStore/models/Publisher.java:        return contactInfo;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public String getContactName() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return contactName;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:
-./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setContactInfo(String contactInfo) {
-./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.contactInfo = contactInfo;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setContactName(String contactName) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.contactName = contactName;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return createdAt;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
+./src/main/java/com/example/TheBookStore/models/Publisher.java:
+./src/main/java/com/example/TheBookStore/models/Publisher.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Publisher.java:        this.modifiedAt = modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:    }
 ./src/main/java/com/example/TheBookStore/models/Publisher.java:}
 ./src/main/java/com/example/TheBookStore/models/Order.java:package com.example.TheBookStore.models;
@@ -679,9 +851,12 @@
 ./src/main/java/com/example/TheBookStore/models/Order.java:import jakarta.persistence.*;
 ./src/main/java/com/example/TheBookStore/models/Order.java:import jakarta.validation.constraints.DecimalMin;
 ./src/main/java/com/example/TheBookStore/models/Order.java:import jakarta.validation.constraints.NotNull;
+./src/main/java/com/example/TheBookStore/models/Order.java:import org.hibernate.annotations.CreationTimestamp;
+./src/main/java/com/example/TheBookStore/models/Order.java:import org.hibernate.annotations.UpdateTimestamp;
 ./src/main/java/com/example/TheBookStore/models/Order.java:
 ./src/main/java/com/example/TheBookStore/models/Order.java:import java.math.BigDecimal;
 ./src/main/java/com/example/TheBookStore/models/Order.java:import java.time.LocalDate;
+./src/main/java/com/example/TheBookStore/models/Order.java:import java.time.LocalDateTime;
 ./src/main/java/com/example/TheBookStore/models/Order.java:
 ./src/main/java/com/example/TheBookStore/models/Order.java:@Entity
 ./src/main/java/com/example/TheBookStore/models/Order.java:@Table(name = "orders")
@@ -702,6 +877,14 @@
 ./src/main/java/com/example/TheBookStore/models/Order.java:    @DecimalMin(value = "0.0", inclusive = false, message = "Total amount must be greater than 0")
 ./src/main/java/com/example/TheBookStore/models/Order.java:    @Column(nullable = false)
 ./src/main/java/com/example/TheBookStore/models/Order.java:    private BigDecimal totalAmount;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    @CreationTimestamp
+./src/main/java/com/example/TheBookStore/models/Order.java:    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Order.java:    private LocalDateTime createdAt;
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    @UpdateTimestamp
+./src/main/java/com/example/TheBookStore/models/Order.java:    @Column(columnDefinition = "TIMESTAMP")
+./src/main/java/com/example/TheBookStore/models/Order.java:    private LocalDateTime modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Order.java:
 ./src/main/java/com/example/TheBookStore/models/Order.java:    public Long getOrderId() {
 ./src/main/java/com/example/TheBookStore/models/Order.java:        return orderId;
@@ -733,6 +916,22 @@
 ./src/main/java/com/example/TheBookStore/models/Order.java:
 ./src/main/java/com/example/TheBookStore/models/Order.java:    public void setTotalAmount(BigDecimal totalAmount) {
 ./src/main/java/com/example/TheBookStore/models/Order.java:        this.totalAmount = totalAmount;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public LocalDateTime getCreatedAt() {
+./src/main/java/com/example/TheBookStore/models/Order.java:        return createdAt;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public void setCreatedAt(LocalDateTime createdAt) {
+./src/main/java/com/example/TheBookStore/models/Order.java:        this.createdAt = createdAt;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public LocalDateTime getModifiedAt() {
+./src/main/java/com/example/TheBookStore/models/Order.java:        return modifiedAt;
+./src/main/java/com/example/TheBookStore/models/Order.java:    }
+./src/main/java/com/example/TheBookStore/models/Order.java:
+./src/main/java/com/example/TheBookStore/models/Order.java:    public void setModifiedAt(LocalDateTime modifiedAt) {
+./src/main/java/com/example/TheBookStore/models/Order.java:        this.modifiedAt = modifiedAt;
 ./src/main/java/com/example/TheBookStore/models/Order.java:    }
 ./src/main/java/com/example/TheBookStore/models/Order.java:}
 ./src/main/java/com/example/TheBookStore/relationships/OrderDetails.java:package com.example.TheBookStore.relationships;
@@ -855,34 +1054,27 @@
 ./src/main/java/com/example/TheBookStore/relationships/BookCategory.java:}
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:package com.example.TheBookStore.relationships;
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import com.example.TheBookStore.models.Author;
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import com.example.TheBookStore.models.Book;
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import jakarta.persistence.*;
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import java.io.Serializable;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:import java.util.Objects;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:@Entity
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:@Table(name = "books_have_authors")
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:@IdClass(BookAuthor.BookAuthorId.class)
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:public class BookAuthor {
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @Id
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @GeneratedValue(strategy = GenerationType.IDENTITY)
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    private Long id;
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @ManyToOne
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @JoinColumn(name = "author_id", nullable = false)
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    private Author author;
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @Id
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @ManyToOne
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    @JoinColumn(name = "book_id", nullable = false)
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    private Book book;
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public Long getId() {
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        return id;
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public void setId(Long id) {
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        this.id = id;
-./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public Author getAuthor() {
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        return author;
@@ -898,6 +1090,49 @@
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public void setBook(Book book) {
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        this.book = book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    // Composite Key Class
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    public static class BookAuthorId implements Serializable {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        private Long author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        private Long book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public BookAuthorId() {}
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public BookAuthorId(Long author, Long book) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            this.author = author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            this.book = book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public Long getAuthor() {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            return author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public void setAuthor(Long author) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            this.author = author;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public Long getBook() {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            return book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public void setBook(Long book) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            this.book = book;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        @Override
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public boolean equals(Object o) {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            if (this == o) return true;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            if (o == null || getClass() != o.getClass()) return false;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            BookAuthorId that = (BookAuthorId) o;
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            return Objects.equals(author, that.author) &&
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:                    Objects.equals(book, that.book);
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        @Override
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        public int hashCode() {
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:            return Objects.hash(author, book);
+./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:        }
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:    }
 ./src/main/java/com/example/TheBookStore/relationships/BookAuthor.java:}
 ./src/main/java/com/example/TheBookStore/TheBookStoreApplication.java:package com.example.TheBookStore;
@@ -997,7 +1232,7 @@
 ./src/main/java/com/example/TheBookStore/repositories/BookCategoryRepository.java:}
 ./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:package com.example.TheBookStore.repositories;
 ./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:
-./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:import com.example.TheBookStore.relationships.OrderDetails;
+./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:import com.example.TheBookStore.models.OrderDetails;
 ./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:import org.springframework.data.jpa.repository.JpaRepository;
 ./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:
 ./src/main/java/com/example/TheBookStore/repositories/OrderDetailsRepository.java:public interface OrderDetailsRepository extends JpaRepository <OrderDetails, Long> {
@@ -1071,11 +1306,11 @@
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setTitle(book.getTitle());
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setAuthor(book.getAuthor());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://        existingBook.setAuthor(book.getAuthor());
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setIsbn(book.getIsbn());
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setGenre(book.getGenre());
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setPrice(book.getPrice());
-./src/main/java/com/example/TheBookStore/controllers/BookController.java:        existingBook.setStockQuantity(book.getStockQuantity());
+./src/main/java/com/example/TheBookStore/controllers/BookController.java://        existingBook.setStockQuantity(book.getStockQuantity());
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:
 ./src/main/java/com/example/TheBookStore/controllers/BookController.java:        Publisher publisher = publisherRepository.findById(publisherId)
@@ -1101,6 +1336,7 @@
 ./src/main/resources/application.properties:spring.datasource.password=1q2w3e4r
 ./src/main/resources/application.properties:
 ./src/main/resources/application.properties:spring.jpa.hibernate.ddl-auto=update
+./src/main/resources/application.properties:spring.data.rest.basePath=/api
 ./src/main/resources/templates/books/list.html:<!DOCTYPE html>
 ./src/main/resources/templates/books/list.html:<html lang="en" xmlns:th="http://www.thymeleaf.org">
 ./src/main/resources/templates/books/list.html:<head th:replace="~{layout.html :: head}"></head>
@@ -1140,7 +1376,8 @@
 ./src/main/resources/templates/books/form.html:<body>
 ./src/main/resources/templates/books/form.html:<section class="section">
 ./src/main/resources/templates/books/form.html:    <h1 class="title" th:text="${book != null ? 'Edit Book' : 'Add Book'}"></h1>
-./src/main/resources/templates/books/form.html:    <form th:action="${book != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+./src/main/resources/templates/books/form.html:    <form th:action="${book?.bookId != null ? '/books/update/' + book.bookId : '/books/save'}" method="post">
+./src/main/resources/templates/books/form.html:    <input type="hidden" name="bookId" th:value="${book?.bookId}">
 ./src/main/resources/templates/books/form.html:        <div class="field">
 ./src/main/resources/templates/books/form.html:            <label class="label">Title</label>
 ./src/main/resources/templates/books/form.html:            <div class="control">

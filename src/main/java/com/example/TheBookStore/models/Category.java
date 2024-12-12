@@ -4,6 +4,8 @@ package com.example.TheBookStore.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -19,6 +21,22 @@ public class Category {
     @NotBlank(message = "Description is required")
     @Column(nullable = false, unique = true)
     private String description;
+
+    @ManyToMany(mappedBy = "categories")
+    private List<Book> books;
+
+
+
+
+
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
 
     public Long getCategoryId() {
         return categoryId;

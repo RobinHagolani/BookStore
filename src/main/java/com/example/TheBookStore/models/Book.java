@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -24,9 +25,22 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-//    @ManyToOne
-//    @JoinColumn(name = "author_id", nullable = false)
-//    private Author author;
+    @ManyToMany
+    @JoinTable(
+            name = "book_authors",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_categories",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+
 
     @NotBlank(message = "ISBN is required")
     @Column(nullable = false)
@@ -51,6 +65,18 @@ public class Book {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modifiedAt;
 
+
+
+
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
     public Long getBookId() {
         return bookId;
     }
@@ -67,13 +93,13 @@ public class Book {
         this.title = title;
     }
 
-//    public Author getAuthor() {
-//        return author;
-//    }
-//
-//    public void setAuthor(Author author) {
-//        this.author = author;
-//    }
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
 
     public String getIsbn() {
         return isbn;
